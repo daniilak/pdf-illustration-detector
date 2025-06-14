@@ -8,6 +8,9 @@ from PIL import Image
 from os import listdir
 from os.path import isfile, join
 import shutil
+from setproctitle import setproctitle
+
+setproctitle("PDF_IMAGE_EXTRACT")
 
 class PDFImageExtractor:
     def __init__(self, model_path='yolov8l.pt'):
@@ -47,6 +50,8 @@ class PDFImageExtractor:
             'pattern': ['ornament', 'decoration', 'pattern', 'texture', 'design', 'artwork', 'art', 'drawing', 'illustration'],
             # Транспортные средства
             'vehicle': ['car', 'truck', 'motorcycle', 'bicycle', 'bus', 'train', 'airplane', 'boat'],
+
+            'illustration': ['picture', 'photo', 'image', 'painting'],
             # Дополнительные классы
             'other': ['image', 'photo', 'picture', 'illustration']
         }
@@ -200,8 +205,10 @@ class PDFImageExtractor:
 
 if __name__ == '__main__':
     # Пример использования
-    folder = "~/library_data/data/lib_files/0/chkt"
+    folder = "/home/daniilak/library_data/data/lib_files/0/chkt"
     for filename in [f for f in listdir(folder) if isfile(join(folder, f))]:
+        if filename != "chkt_0_0001747.pdf":
+            continue
         extractor = PDFImageExtractor()
         extractor.extract_images_from_pdf(
             pdf_path=f'{folder}/{filename}',

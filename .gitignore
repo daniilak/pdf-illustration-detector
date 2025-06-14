@@ -1,2 +1,6 @@
 output_chkt/
+output_chkt_sam/
+output_chkt_test/
+*.pth
 *.pt
+*.log

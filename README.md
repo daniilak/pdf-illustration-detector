@@ -1,45 +1,133 @@
-# PDF Image Extractor
+# Библиотека для извлечения изображений и текста из PDF
 
-Инструмент для извлечения изображений из PDF файлов с использованием YOLOv8.
+Этот проект представляет собой набор инструментов для извлечения изображений и текста из PDF-документов с использованием различных методов компьютерного зрения и обработки изображений.
+
+## Возможности
+
+- Извлечение текста из PDF с помощью Tesseract OCR
+- Извлечение изображений с использованием трех различных подходов:
+  - YOLOv8 для детекции объектов
+  - YOLO-World для детекции объектов с открытым словарем
+  - Segment Anything Model (SAM) для сегментации изображений
+- Предобработка изображений для улучшения качества
+- Сохранение результатов в структурированном формате JSON
+- Подробное логирование процесса обработки
+
+## Требования
+
+- Python 3.8+
+- PyTorch 2.0.0+
+- CUDA (опционально, для ускорения работы моделей)
 
 ## Установка
 
-1. Установите зависимости:
+1. Клонируйте репозиторий:
+```bash
+git clone [url-репозитория]
+cd [директория-проекта]
+```
+
+2. Установите зависимости:
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Скачайте предобученную модель YOLOv8:
-```bash
-python3 -c "from ultralytics import YOLO; YOLO('yolov8x.pt')"
-```
+3. Скачайте необходимые модели:
+- YOLOv8 модели (yolov8n.pt, yolov8m.pt, yolov8l.pt, yolov8x.pt)
+- SAM модель (sam_vit_h_4b8939.pth)
+- YOLO-World модель (yolo_world_l.pt)
 
-Список моделей:
+## Структура проекта
 
-* yolov8n.pt (nano) - самая маленькая и быстрая, но менее точная
-* yolov8s.pt (small) - баланс между скоростью и точностью
-* yolov8m.pt (medium) - хорошая точность, умеренная скорость
-* yolov8l.pt (large) - высокая точность, но медленнее
-* yolov8x.pt (xlarge) - самая точная, но самая медленная
-
+- `pdf_text_extractor.py` - Извлечение текста с помощью Tesseract OCR
+- `pdf_image_extractor.py` - Извлечение изображений с помощью YOLOv8
+- `pdf_image_extractor_sam.py` - Извлечение изображений с помощью SAM
+- `pdf_image_extractor_yolo.py` - Извлечение изображений с помощью YOLO-World
+- `requirements.txt` - Зависимости проекта
 
 ## Использование
 
-1. Поместите ваш PDF файл в директорию проекта
-2. Запустите скрипт:
-```bash
-python pdf_image_extractor.py
+### Извлечение текста
+
+```python
+from pdf_text_extractor import PDFTextExtractor
+
+extractor = PDFTextExtractor()
+extractor.extract_text_from_pdf(
+    pdf_path='путь/к/файлу.pdf',
+    output_dir='выходная/директория',
+    lang='rus+eng+chv'  # Поддерживаемые языки
+)
 ```
 
-## Результаты
+### Извлечение изображений с YOLOv8
 
-Скрипт создаст директорию `output` со следующей структурой:
-- `images/` - извлеченные изображения
-- `annotations/` - JSON файлы с координатами и метаданными
-- `page_X_detection.jpg` - изображения страниц с отмеченными детекциями
+```python
+from pdf_image_extractor import PDFImageExtractor
 
-## Настройка
+extractor = PDFImageExtractor(model_path='yolov8l.pt')
+extractor.extract_images_from_pdf(
+    pdf_path='путь/к/файлу.pdf',
+    output_dir='выходная/директория',
+    min_confidence=0.2
+)
+```
 
-Вы можете настроить параметры в скрипте:
-- `min_confidence` - минимальный порог уверенности для детекции (по умолчанию 0.5)
-- `model_path` - путь к модели YOLOv8 (по умолчанию 'yolov8n.pt') 
+### Извлечение изображений с SAM
+
+```python
+from pdf_image_extractor_sam import PDFImageExtractorSAM
+
+extractor = PDFImageExtractorSAM(
+    model_path='sam_vit_h_4b8939.pth',
+    model_type='vit_h'
+)
+extractor.extract_images_from_pdf(
+    pdf_path='путь/к/файлу.pdf',
+    output_dir='выходная/директория',
+    min_confidence=0.2
+)
+```
+
+### Извлечение изображений с YOLO-World
+
+```python
+from pdf_image_extractor_yolo import PDFImageExtractorYOLO
+
+extractor = PDFImageExtractorYOLO(
+    model_path='yolo_world_l.pt',
+    model_type='l'
+)
+extractor.extract_images_from_pdf(
+    pdf_path='путь/к/файлу.pdf',
+    output_dir='выходная/директория',
+    min_confidence=0.2
+)
+```
+
+## Выходные данные
+
+Для каждого обработанного PDF-файла создается отдельная директория, содержащая:
+- Извлеченные изображения в формате JPG
+- JSON-файл с аннотациями, содержащий:
+  - Информацию о PDF-файле
+  - Координаты найденных изображений
+  - Уверенность в детекции
+  - Классы объектов (для YOLO)
+  - Номера страниц
+
+## Логирование
+
+Все операции логируются в файлы:
+- `pdf_text_extraction.log` - для операций с текстом
+- `pdf_extraction.log` - для операций с изображениями
+
+## Примечания
+
+- Для работы с русским текстом требуется установленный Tesseract OCR с поддержкой русского языка
+- Рекомендуется использовать GPU для ускорения работы моделей
+- Минимальные требования к памяти зависят от используемой модели:
+  - YOLOv8n: ~2GB RAM
+  - YOLOv8l: ~8GB RAM
+  - SAM: ~16GB RAM
+  - YOLO-World: ~8GB RAM 
