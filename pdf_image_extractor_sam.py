@@ -307,10 +307,11 @@ if __name__ == '__main__':
     folder = "/home/daniilak/library_data/data/lib_files/0/chkt"
     setproctitle("PDF_IMAGE_EXTRACT_SAM")
     for filename in [f for f in listdir(folder) if isfile(join(folder, f))]:
+        # if filename != "chkt_0_0000237.pdf":
+            # continue
         extractor = PDFImageExtractorSAM()
         extractor.extract_images_from_pdf(
             pdf_path=f'{folder}/{filename}',
             output_dir='output_chkt_sam',
             min_confidence=0.2
         )
-        break

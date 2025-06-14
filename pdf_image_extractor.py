@@ -207,8 +207,8 @@ if __name__ == '__main__':
     # Пример использования
     folder = "/home/daniilak/library_data/data/lib_files/0/chkt"
     for filename in [f for f in listdir(folder) if isfile(join(folder, f))]:
-        if filename != "chkt_0_0001747.pdf":
-            continue
+        # if filename != "chkt_0_0001747.pdf":
+            # continue
         extractor = PDFImageExtractor()
         extractor.extract_images_from_pdf(
             pdf_path=f'{folder}/{filename}',
