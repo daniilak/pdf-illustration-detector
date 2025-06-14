@@ -11,19 +11,16 @@ pip install -r requirements.txt
 
 2. Скачайте предобученную модель YOLOv8:
 ```bash
-python3 -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
+python3 -c "from ultralytics import YOLO; YOLO('yolov8x.pt')"
 ```
 
-или более мощную
-```bash
-python3 -c "from ultralytics import YOLO; YOLO('yolov8x.pt')
-```
+Список моделей:
 
-yolov8n.pt (nano) - самая маленькая и быстрая, но менее точная
-yolov8s.pt (small) - баланс между скоростью и точностью
-yolov8m.pt (medium) - хорошая точность, умеренная скорость
-yolov8l.pt (large) - высокая точность, но медленнее
-yolov8x.pt (xlarge) - самая точная, но самая медленная
+* yolov8n.pt (nano) - самая маленькая и быстрая, но менее точная
+* yolov8s.pt (small) - баланс между скоростью и точностью
+* yolov8m.pt (medium) - хорошая точность, умеренная скорость
+* yolov8l.pt (large) - высокая точность, но медленнее
+* yolov8x.pt (xlarge) - самая точная, но самая медленная
 
 
 ## Использование
